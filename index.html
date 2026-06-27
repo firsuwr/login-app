@@ -4,42 +4,61 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>FIRS UWR · Portale Atleti</title>
-<meta name="description" content="Area riservata agli atleti del Firenze Rugby Subacqueo. Accedi al portale per allenamenti, tornei e certificati.">
+<meta name="description" content="Area riservata agli atleti del Firenze Rugby Subacqueo.">
 <meta name="theme-color" content="#050a14">
-
-<!-- Anteprima quando il link viene condiviso (WhatsApp, ecc.) -->
-<meta property="og:type" content="website">
 <meta property="og:title" content="FIRS UWR · Portale Atleti">
 <meta property="og:description" content="Area riservata agli atleti del Firenze Rugby Subacqueo.">
 <meta property="og:image" content="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg">
+<meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-
 <link rel="icon" href="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg">
 <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg">
-
 <style>
-  html,body{height:100%;margin:0;background:#050a14;}
-  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:#050a14;}
+  /* Iframe a tutto schermo */
   #frame{position:fixed;inset:0;width:100%;height:100%;border:none;display:block;}
+  /* Schermata di caricamento (uguale allo sfondo del portale) */
   .loader{
-    position:fixed;inset:0;z-index:5;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
-    background:radial-gradient(120% 90% at 50% -25%, #1a4d6b 0%, rgba(26,77,107,0) 42%), linear-gradient(180deg,#0f2742 0%,#0a1629 46%,#050a14 100%);
-    transition:opacity .5s ease;
+    position:fixed;inset:0;z-index:9;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+    background:
+      radial-gradient(120% 90% at 50% -25%, #1a4d6b 0%, rgba(26,77,107,0) 42%),
+      linear-gradient(180deg,#0f2742 0%,#0a1629 46%,#050a14 100%);
+    transition:opacity .5s ease .1s;
   }
   .loader.hide{opacity:0;pointer-events:none;}
-  .loader img{width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,102,0,.5);box-shadow:0 0 0 6px rgba(255,102,0,.08),0 16px 40px rgba(0,0,0,.5);}
-  .spinner{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,102,0,.18);border-top-color:#ff6600;animation:spin .9s linear infinite;}
+  .loader img{
+    width:100px;height:100px;border-radius:50%;object-fit:cover;
+    border:2.5px solid rgba(255,102,0,.55);
+    box-shadow:0 0 0 7px rgba(255,102,0,.07),0 16px 44px rgba(0,0,0,.6);
+    animation:bob 6s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  .spinner{
+    width:36px;height:36px;border-radius:50%;
+    border:3px solid rgba(255,102,0,.18);border-top-color:#ff6600;
+    animation:spin .9s linear infinite;
+  }
   @keyframes spin{to{transform:rotate(360deg);}}
-  .loader p{color:#9fb2d0;font-size:13px;letter-spacing:.4px;margin:0;}
+  .loader p{color:#9fb2d0;font-size:13px;letter-spacing:.5px;font-family:system-ui,sans-serif;}
+  /* Banner "non si apre?" */
   .fb{
-    position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:6;
-    font-size:12px;color:#9fb2d0;background:rgba(10,22,41,.92);border:1px solid rgba(255,102,0,.32);
-    border-radius:20px;padding:8px 15px;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);
+    position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));
+    left:50%;transform:translateX(-50%);z-index:10;
+    font-size:12px;color:#9fb2d0;
+    background:rgba(10,22,41,.92);border:1px solid rgba(255,102,0,.35);
+    border-radius:22px;padding:9px 18px;
+    opacity:0;pointer-events:none;transition:opacity .35s;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    white-space:nowrap;font-family:system-ui,sans-serif;
   }
   .fb.show{opacity:1;pointer-events:auto;}
-  .fb a{color:#ff6600;font-weight:600;text-decoration:none;}
-  @media (prefers-reduced-motion:reduce){.spinner{animation:none;}}
+  .fb a{color:#ff6600;font-weight:700;text-decoration:none;}
+  @media(prefers-reduced-motion:reduce){
+    .loader img,.spinner{animation:none;}
+    .loader img{border-color:#ff6600;}
+  }
 </style>
 </head>
 <body>
@@ -52,23 +71,25 @@
     <p>Apertura del portale…</p>
   </div>
 
-  <div class="fb" id="fb">Non si apre? <a id="ext" target="_blank" rel="noopener">Apri a tutto schermo ↗</a></div>
+  <div class="fb" id="fb">
+    Non si apre? <a id="extLink" target="_blank" rel="noopener">Apri a tutto schermo ↗</a>
+  </div>
 
 <script>
 
-  var PORTAL_URL = "https://script.google.com/macros/s/AKfycbxiiWnOe9cjxiwLIGkhqRUMiPruu1XRGOcXw6yhMT0qw0kutEJN2qdTRqVXPF2wb3s/exec?page=portale";
+  var URL = "https://script.google.com/macros/s/AKfycbxiiWnOe9cjxiwLIGkhqRUMiPruu1XRGOcXw6yhMT0qw0kutEJN2qdTRqVXPF2wb3s/exec?page=portale";
 
   var f  = document.getElementById('frame');
-  var l  = document.getElementById('loader');
+  var lo = document.getElementById('loader');
   var fb = document.getElementById('fb');
-  document.getElementById('ext').href = PORTAL_URL;
+  document.getElementById('extLink').href = URL;
 
-  f.src = PORTAL_URL;
+  f.src = URL;
 
-  var tLento = setTimeout(function(){ fb.classList.add('show'); }, 8000);
+  var t = setTimeout(function(){ fb.classList.add('show'); }, 8000);
   f.addEventListener('load', function(){
-    l.classList.add('hide');
-    clearTimeout(tLento);
+    lo.classList.add('hide');
+    clearTimeout(t);
   });
 </script>
 </body>
