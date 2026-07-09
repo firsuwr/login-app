@@ -7,7 +7,6 @@
 <meta name="description" content="Area riservata agli atleti del Firenze Rugby Subacqueo.">
 <meta name="theme-color" content="#050c18">
 
-<!-- Preconnessioni: aprono in anticipo il canale verso Google così il portale parte prima -->
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,9 +23,7 @@
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;background:#050c18;}
-  #frame{position:fixed;inset:0;width:100%;height:100%;border:none;display:block;}
 
-  /* Schermata di caricamento in tema oceano profondo */
   .loader{
     position:fixed;inset:0;z-index:9;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
@@ -34,11 +31,8 @@
       radial-gradient(120% 90% at 50% -25%, #1c5478 0%, rgba(28,84,120,0) 44%),
       radial-gradient(90% 60% at 50% 120%, rgba(255,106,26,0.13) 0%, rgba(255,106,26,0) 55%),
       linear-gradient(180deg,#103049 0%,#0a1a2e 48%,#050c18 100%);
-    transition:opacity .5s ease .1s;
   }
-  .loader.hide{opacity:0;pointer-events:none;}
 
-  /* LOGO QUADRATO (immagine intera, angoli arrotondati) con alone pulsante */
   .lo-crest{position:relative;display:inline-block;}
   .lo-crest img{
     width:112px;height:auto;border-radius:24px;display:block;
@@ -59,7 +53,6 @@
   @keyframes spin{to{transform:rotate(360deg);}}
   .loader p{color:#c3d0ea;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-family:system-ui,sans-serif;opacity:.75;}
 
-  /* Aiuto se il portale tarda (non rallenta nulla) */
   .fb{
     position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:10;
     font-size:12px;color:#c3d0ea;background:rgba(13,26,48,.92);border:1px solid rgba(255,106,26,.35);
@@ -76,8 +69,6 @@
 </head>
 <body>
 
-  <iframe id="frame" title="Portale atleti FIRS UWR" allow="fullscreen"></iframe>
-
   <div class="loader" id="loader">
     <div class="lo-crest">
       <img src="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg" alt="FIRS UWR">
@@ -86,19 +77,20 @@
     <p>Apertura del portale…</p>
   </div>
 
-  <div class="fb" id="fb">Non si apre? <a id="extLink" target="_blank" rel="noopener">Apri a tutto schermo ↗</a></div>
+  <div class="fb" id="fb">Non si apre? <a id="extLink" href="#">Apri qui ↗</a></div>
 
 <script>
+  // NIENTE IFRAME: Safari (ITP) blocca spesso i cookie di terze parti quando
+  // script.google.com viene caricato dentro un iframe da un dominio diverso
+  // (github.io), mostrando "connessione negata". La navigazione diretta invece
+  // funziona sempre, quindi reindirizziamo l'intera pagina al portale.
   var PORTAL_URL = "https://script.google.com/macros/s/AKfycbxiiWnOe9cjxiwLIGkhqRUMiPruu1XRGOcXw6yhMT0qw0kutEJN2qdTRqVXPF2wb3s/exec?page=portale";
-  var f  = document.getElementById('frame');
-  var lo = document.getElementById('loader');
-  var fb = document.getElementById('fb');
   document.getElementById('extLink').href = PORTAL_URL;
 
-  f.src = PORTAL_URL;  // carica subito
+  // Mostra il link di riserva se per qualche motivo il redirect non parte
+  setTimeout(function(){ document.getElementById('fb').classList.add('show'); }, 3000);
 
-  var t = setTimeout(function(){ fb.classList.add('show'); }, 8000);
-  f.addEventListener('load', function(){ lo.classList.add('hide'); clearTimeout(t); });
+  window.location.replace(PORTAL_URL);
 </script>
 </body>
 </html>
