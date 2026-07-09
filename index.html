@@ -5,95 +5,91 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>FIRS UWR · Portale Atleti</title>
 <meta name="description" content="Area riservata agli atleti del Firenze Rugby Subacqueo.">
-<meta name="theme-color" content="#050c18">
-
-<!-- Fa aprire l'icona in modalità "app" vera: niente barra indirizzi di Safari,
-     né github.io né script.google.com saranno mai visibili. -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="FIRS UWR">
-
-<link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://script.googleusercontent.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="dns-prefetch" href="https://script.googleusercontent.com">
-
+<meta name="theme-color" content="#050a14">
 <meta property="og:title" content="FIRS UWR · Portale Atleti">
 <meta property="og:description" content="Area riservata agli atleti del Firenze Rugby Subacqueo.">
 <meta property="og:image" content="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg">
 <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg">
-
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;background:#050c18;}
-
+  html,body{height:100%;background:#050a14;}
+  /* Iframe a tutto schermo */
+  #frame{position:fixed;inset:0;width:100%;height:100%;border:none;display:block;}
+  /* Schermata di caricamento (uguale allo sfondo del portale) */
   .loader{
     position:fixed;inset:0;z-index:9;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
     background:
-      radial-gradient(120% 90% at 50% -25%, #1c5478 0%, rgba(28,84,120,0) 44%),
-      radial-gradient(90% 60% at 50% 120%, rgba(255,106,26,0.13) 0%, rgba(255,106,26,0) 55%),
-      linear-gradient(180deg,#103049 0%,#0a1a2e 48%,#050c18 100%);
+      radial-gradient(120% 90% at 50% -25%, #1a4d6b 0%, rgba(26,77,107,0) 42%),
+      linear-gradient(180deg,#0f2742 0%,#0a1629 46%,#050a14 100%);
+    transition:opacity .5s ease .1s;
   }
-
-  .lo-crest{position:relative;display:inline-block;}
-  .lo-crest img{
-    width:112px;height:auto;border-radius:24px;display:block;
-    border:2.5px solid rgba(255,106,26,.6);
-    box-shadow:0 0 0 8px rgba(255,106,26,.07),0 20px 50px rgba(0,0,0,.6);
-    position:relative;z-index:1;animation:bob 6s ease-in-out infinite;
+  .loader.hide{opacity:0;pointer-events:none;}
+  .loader img{
+    width:100px;height:100px;border-radius:50%;object-fit:cover;
+    border:2.5px solid rgba(255,102,0,.55);
+    box-shadow:0 0 0 7px rgba(255,102,0,.07),0 16px 44px rgba(0,0,0,.6);
+    animation:bob 6s ease-in-out infinite;
   }
-  .lo-crest::after{content:"";position:absolute;inset:-12px;border-radius:36px;
-    border:1px solid rgba(255,106,26,.28);animation:halo 3.4s ease-out infinite;}
   @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
-  @keyframes halo{0%{transform:scale(.9);opacity:.8;}100%{transform:scale(1.34);opacity:0;}}
-
   .spinner{
-    width:34px;height:34px;border-radius:50%;
-    border:3px solid rgba(255,106,26,.18);border-top-color:#ff6a1a;
+    width:36px;height:36px;border-radius:50%;
+    border:3px solid rgba(255,102,0,.18);border-top-color:#ff6600;
     animation:spin .9s linear infinite;
   }
   @keyframes spin{to{transform:rotate(360deg);}}
-  .loader p{color:#c3d0ea;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-family:system-ui,sans-serif;opacity:.75;}
-
+  .loader p{color:#9fb2d0;font-size:13px;letter-spacing:.5px;font-family:system-ui,sans-serif;}
+  /* Banner "non si apre?" */
   .fb{
-    position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:10;
-    font-size:12px;color:#c3d0ea;background:rgba(13,26,48,.92);border:1px solid rgba(255,106,26,.35);
-    border-radius:22px;padding:9px 18px;opacity:0;pointer-events:none;transition:opacity .35s;
-    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);white-space:nowrap;font-family:system-ui,sans-serif;
+    position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));
+    left:50%;transform:translateX(-50%);z-index:10;
+    font-size:12px;color:#9fb2d0;
+    background:rgba(10,22,41,.92);border:1px solid rgba(255,102,0,.35);
+    border-radius:22px;padding:9px 18px;
+    opacity:0;pointer-events:none;transition:opacity .35s;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    white-space:nowrap;font-family:system-ui,sans-serif;
   }
   .fb.show{opacity:1;pointer-events:auto;}
-  .fb a{color:#ff6a1a;font-weight:700;text-decoration:none;}
-
+  .fb a{color:#ff6600;font-weight:700;text-decoration:none;}
   @media(prefers-reduced-motion:reduce){
-    .lo-crest img,.lo-crest::after,.spinner{animation:none;}
+    .loader img,.spinner{animation:none;}
+    .loader img{border-color:#ff6600;}
   }
 </style>
 </head>
 <body>
 
+  <iframe id="frame" title="Portale atleti FIRS UWR" allow="fullscreen"></iframe>
+
   <div class="loader" id="loader">
-    <div class="lo-crest">
-      <img src="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg" alt="FIRS UWR">
-    </div>
+    <img src="https://raw.githubusercontent.com/Andrea91x/immagini-UWR/cf9e13f6240e9fe83e99be32db149476337eb038/Logo-Firs.jpeg" alt="FIRS UWR">
     <div class="spinner"></div>
     <p>Apertura del portale…</p>
   </div>
 
-  <div class="fb" id="fb">Non si apre? <a id="extLink" href="#">Apri qui ↗</a></div>
+  <div class="fb" id="fb">
+    Non si apre? <a id="extLink" target="_blank" rel="noopener">Apri a tutto schermo ↗</a>
+  </div>
 
 <script>
-  var PORTAL_URL = "https://script.google.com/macros/s/AKfycbxiiWnOe9cjxiwLIGkhqRUMiPruu1XRGOcXw6yhMT0qw0kutEJN2qdTRqVXPF2wb3s/exec?page=portale";
-  document.getElementById('extLink').href = PORTAL_URL;
+  var URL = "https://script.google.com/macros/s/AKfycbxiiWnOe9cjxiwLIGkhqRUMiPruu1XRGOcXw6yhMT0qw0kutEJN2qdTRqVXPF2wb3s/exec?page=portale";
 
-  // Mostra il link di riserva se per qualche motivo il redirect non parte
-  setTimeout(function(){ document.getElementById('fb').classList.add('show'); }, 3000);
+  var f  = document.getElementById('frame');
+  var lo = document.getElementById('loader');
+  var fb = document.getElementById('fb');
+  document.getElementById('extLink').href = URL;
 
-  window.location.replace(PORTAL_URL);
+  f.src = URL;
+
+  var t = setTimeout(function(){ fb.classList.add('show'); }, 8000);
+  f.addEventListener('load', function(){
+    lo.classList.add('hide');
+    clearTimeout(t);
+  });
 </script>
 </body>
 </html>
