@@ -7,6 +7,13 @@
 <meta name="description" content="Area riservata agli atleti del Firenze Rugby Subacqueo.">
 <meta name="theme-color" content="#050c18">
 
+<!-- Fa aprire l'icona in modalità "app" vera: niente barra indirizzi di Safari,
+     né github.io né script.google.com saranno mai visibili. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FIRS UWR">
+
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,10 +87,6 @@
   <div class="fb" id="fb">Non si apre? <a id="extLink" href="#">Apri qui ↗</a></div>
 
 <script>
-  // NIENTE IFRAME: Safari (ITP) blocca spesso i cookie di terze parti quando
-  // script.google.com viene caricato dentro un iframe da un dominio diverso
-  // (github.io), mostrando "connessione negata". La navigazione diretta invece
-  // funziona sempre, quindi reindirizziamo l'intera pagina al portale.
   var PORTAL_URL = "https://script.google.com/macros/s/AKfycbxiiWnOe9cjxiwLIGkhqRUMiPruu1XRGOcXw6yhMT0qw0kutEJN2qdTRqVXPF2wb3s/exec?page=portale";
   document.getElementById('extLink').href = PORTAL_URL;
 
