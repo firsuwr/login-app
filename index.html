@@ -25,14 +25,11 @@
     html,body{height:100%;width:100%;overflow:hidden;background:#050c18;
       font-family:-apple-system,"Segoe UI",Roboto,sans-serif;}
 
-    /* Layout a COLONNA con flexbox: striscia in alto (zona barra di stato),
-       iframe che riempie il centro, striscia in basso (zona barra Home).
-       L'altezza arriva dal flex (height:100% reale), NON da 100vh: su iPhone
-       100vh puo' essere piu' alto dello schermo vero e spingeva il menu fuori. */
-    body{ display:flex; flex-direction:column; }
-    #top-safe   { flex:0 0 auto; height:env(safe-area-inset-top);    background:#050c18; }
-    #app        { flex:1 1 auto; min-height:0; width:100%; border:none; display:block; background:#050c18; }
-    #bottom-safe{ flex:0 0 auto; height:env(safe-area-inset-bottom); background:#040a15; }
+    /* A TUTTO SCHERMO: l'iframe copre l'intero schermo, bordo a bordo.
+       Le safe-area NON si gestiscono qui (dentro l'iframe valgono zero):
+       il wrapper le misura in JS e le passa al portale via URL, che poi
+       spinge header e menu al posto giusto restando a tutto schermo. */
+    #app{position:fixed; inset:0; width:100%; height:100%; border:none; display:block; background:#050c18;}
 
     /* Schermata di caricamento (oceano profondo) sopra il portale */
     #splash{
@@ -88,9 +85,7 @@
     var URL_APP = "https://script.google.com/macros/s/AKfycbxiiWnOe9cjxiwLIGkhqRUMiPruu1XRGOcXw6yhMT0qw0kutEJN2qdTRqVXPF2wb3s/exec?page=portale";
   </script>
 
-  <div id="top-safe"></div>
   <iframe id="app" title="Portale FIRS UWR" allow="clipboard-read; clipboard-write; camera; microphone"></iframe>
-  <div id="bottom-safe"></div>
 
   <div id="splash">
     <div class="crest">
@@ -113,8 +108,21 @@
       var fallback = document.getElementById('fallback');
       var fbLink   = document.getElementById('fallbackLink');
 
-      fbLink.href = URL_APP;
-      iframe.src  = URL_APP;   // carica subito il portale
+      // Misura le safe-area (px) e le passa al portale via URL: dentro l'iframe
+      // quei valori valgono zero, quindi ci pensa il wrapper a comunicarle.
+      function insetPx(side){
+        var d=document.createElement('div');
+        d.style.cssText='position:fixed;left:0;top:0;width:1px;height:env(safe-area-inset-'+side+');visibility:hidden;pointer-events:none;';
+        document.body.appendChild(d);
+        var v=Math.round(d.getBoundingClientRect().height);
+        d.parentNode.removeChild(d);
+        return v;
+      }
+      var _sat=insetPx('top'), _sab=insetPx('bottom');
+      var _url=URL_APP+(URL_APP.indexOf('?')>-1?'&':'?')+'sat='+_sat+'&sab='+_sab;
+
+      fbLink.href = _url;
+      iframe.src  = _url;   // carica il portale passando le safe-area
 
       // Nasconde lo splash quando il portale ha finito di caricare
       iframe.addEventListener('load', function () {
