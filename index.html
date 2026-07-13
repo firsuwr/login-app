@@ -30,9 +30,10 @@
        e resta sopra la barra Home, senza rimpicciolire l'iframe. */
     body{
       padding-top:env(safe-area-inset-top);
-      padding-bottom:env(safe-area-inset-bottom);
       padding-left:env(safe-area-inset-left);
       padding-right:env(safe-area-inset-right);
+      /* Niente padding-bottom: l'app arriva fino in fondo allo schermo e la
+         barra Home galleggia sopra il contenuto (come nelle app native). */
     }
 
     /* Il portale vero e proprio: riempie semplicemente lo spazio "sicuro"
