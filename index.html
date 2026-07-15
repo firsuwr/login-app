@@ -124,6 +124,24 @@
       fbLink.href = _url;
       iframe.src  = _url;   // carica il portale passando le safe-area
 
+      // Canale di riserva: spedisce le stesse misure DENTRO il portale con un
+      // messaggio diretto, ripetuto per ~12 secondi (il portale vive in una
+      // doppia scatola di Google e impiega qualche secondo a essere pronto).
+      function inviaMisure() {
+        var msg = { firsSafeArea: true, sat: _sat, sab: _sab };
+        try { iframe.contentWindow.postMessage(msg, '*'); } catch (e) {}
+        try {
+          var fr = iframe.contentWindow.frames;
+          for (var i = 0; i < fr.length; i++) { try { fr[i].postMessage(msg, '*'); } catch (e2) {} }
+        } catch (e) {}
+      }
+      var _nInvii = 0;
+      var _timerMisure = setInterval(function () {
+        inviaMisure();
+        if (++_nInvii >= 40) clearInterval(_timerMisure);
+      }, 300);
+      iframe.addEventListener('load', inviaMisure);
+
       // Nasconde lo splash quando il portale ha finito di caricare
       iframe.addEventListener('load', function () {
         splash.classList.add('hidden');
